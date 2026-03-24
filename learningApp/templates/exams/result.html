@@ -1,0 +1,14 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Result | LearnHub{% endblock %}
+
+{% block content %}
+<section class="container section">
+    <div class="card result-card text-center">
+        <h1>Exam Result</h1>
+        <p class="result-score">{{ score }}%</p>
+        <p class="text-muted">You answered {{ correct_answers }} out of {{ total_questions }} correctly.</p>
+        <a href="{% url 'course_list' %}" class="btn btn-primary mt-2">Continue Learning</a>
+    </div>
+</section>
+{% endblock %}

@@ -11,9 +11,24 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+load_dotenv(BASE_DIR / '.env')
+
+
+def get_env(primary_key, legacy_key=None, default=''):
+    value = os.getenv(primary_key)
+    if value:
+        return value
+    if legacy_key:
+        legacy_value = os.getenv(legacy_key)
+        if legacy_value:
+            return legacy_value
+    return default
 
 
 # Quick-start development settings - unsuitable for production
@@ -75,11 +90,15 @@ WSGI_APPLICATION = 'coreBackEnd.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': get_env('DB_NAME', 'DATABASE_NAME'),
+        'USER': get_env('DB_USER', 'DATABASE_USER', 'root'),
+        'PASSWORD': get_env('DB_PASSWORD', 'DATABASE_PASSWORD'),
+        'HOST': get_env('DB_HOST', 'DATABASE_HOST', 'localhost'),
+        'PORT': get_env('DB_PORT', 'DATABASE_PORT', '3306'),
     }
 }
-
+    
 
 # Password validation
 # https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators

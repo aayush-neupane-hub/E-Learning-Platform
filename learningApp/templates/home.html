@@ -1,0 +1,45 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}LearnHub | Home{% endblock %}
+
+{% block content %}
+<!-- Landing Hero -->
+<section class="hero container section">
+    <div class="hero-content">
+        <p class="eyebrow">Upgrade your future</p>
+        <h1>Master in-demand skills with expert-led online courses</h1>
+        <p class="text-muted">Join thousands of learners and build your career through practical lessons, real projects, and assessments.</p>
+        <div class="hero-actions">
+            <a href="{% url 'course_list' %}" class="btn btn-primary">Explore Courses</a>
+            <a href="{% url 'signup' %}" class="btn btn-outline">Start Learning</a>
+        </div>
+    </div>
+    <div class="hero-card card">
+        <h3>Today’s Progress</h3>
+        <p class="text-muted">You completed 3 lessons this week.</p>
+        <div class="progress">
+            <div class="progress-bar" style="width: 64%;"></div>
+        </div>
+        <small>64% weekly target achieved</small>
+    </div>
+</section>
+
+<!-- Featured Courses -->
+<section class="container section">
+    <div class="section-header">
+        <h2>Featured Courses</h2>
+    </div>
+    <div class="course-grid">
+        {% for course in featured_courses %}
+        <article class="card course-card">
+            <img src="{{ course.image }}" alt="{{ course.title }}">
+            <div class="card-body">
+                <h3>{{ course.title }}</h3>
+                <div class="star-rating" data-stars="{{ course.rating }}"></div>
+                <a href="{% url 'course_detail' course.id %}" class="btn btn-ghost">View Details</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

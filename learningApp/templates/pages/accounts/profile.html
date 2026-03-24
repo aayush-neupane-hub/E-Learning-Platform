@@ -1,0 +1,56 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Profile | LearnHub{% endblock %}
+
+{% block content %}
+<section class="container section">
+    <div class="card profile-card">
+        <h1>{{ user.username|default:'Student Name' }}</h1>
+        <p class="text-muted">{{ user.email|default:'student@example.com' }}</p>
+
+        <div class="hero-actions mt-1">
+            <button type="button" class="btn btn-ghost" data-tab-target="overview">Overview</button>
+            <button type="button" class="btn btn-ghost" data-tab-target="activity">Recent Activity</button>
+            <button type="button" class="btn btn-outline" data-modal-open="profileModal">Edit Profile</button>
+        </div>
+
+        <div class="mt-2" data-tab-panel="overview">
+            <p class="text-muted">Track your learning milestones and account summary here.</p>
+        </div>
+        <div class="mt-2" data-tab-panel="activity" hidden>
+            <p class="text-muted">Completed "Python Variables" lesson 2 hours ago.</p>
+        </div>
+
+        <div class="profile-grid mt-2">
+            <div class="metric card-sm">
+                <h3>Enrolled Courses</h3>
+                <p>8</p>
+            </div>
+            <div class="metric card-sm">
+                <h3>Completed Lessons</h3>
+                <p>54</p>
+            </div>
+            <div class="metric card-sm">
+                <h3>Average Score</h3>
+                <p>86%</p>
+            </div>
+        </div>
+
+        <div id="profileModal" class="card mt-2" hidden>
+            <h2>Edit Profile</h2>
+            <form class="form-grid">
+                <label>Display Name
+                    <input type="text" value="{{ user.username|default:'Student Name' }}">
+                </label>
+                <label>Bio
+                    <textarea rows="3" placeholder="Tell us about your learning goals..."></textarea>
+                </label>
+                <div class="hero-actions">
+                    <button type="button" class="btn btn-primary">Save</button>
+                    <button type="button" class="btn btn-ghost" data-modal-close>Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

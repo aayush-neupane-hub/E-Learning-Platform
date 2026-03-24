@@ -1,0 +1,40 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}{{ lesson.title }} | Lesson{% endblock %}
+
+{% block content %}
+<section class="container section">
+    <div class="lesson-layout">
+        <article class="card">
+            <h1>{{ lesson.title }}</h1>
+            <div class="video-box">Video Player Placeholder</div>
+            <p>{{ lesson.content }}</p>
+
+            <div class="lesson-actions">
+                <button class="btn btn-primary" type="button">Mark as Completed</button>
+                <a href="{% url 'exam' course_id %}" class="btn btn-outline">Take Quiz</a>
+            </div>
+        </article>
+
+        <aside class="card">
+            <h2>Comments</h2>
+            <form class="form-grid">
+                <label>Add Comment
+                    <textarea rows="4" placeholder="Write your question or feedback..."></textarea>
+                </label>
+                <button class="btn btn-primary" type="button">Post Comment</button>
+            </form>
+            <div class="comment-list mt-2">
+                <div class="comment-item">
+                    <strong>{{ user.username|default:'Student' }}</strong>
+                    <p>This lesson was very clear and helpful.</p>
+                </div>
+                <div class="comment-item">
+                    <strong>Instructor</strong>
+                    <p>Great question in minute 04:20. I updated the notes.</p>
+                </div>
+            </div>
+        </aside>
+    </div>
+</section>
+{% endblock %}

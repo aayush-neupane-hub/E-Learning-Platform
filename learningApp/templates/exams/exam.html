@@ -1,0 +1,32 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Exam | LearnHub{% endblock %}
+
+{% block content %}
+<section class="container section">
+    <article class="card exam-card">
+        <div class="exam-header">
+            <h1>Module Quiz</h1>
+            <div class="timer" data-timer="1200">
+                <strong>Time Left:</strong> <span class="timer-value">20:00</span>
+            </div>
+        </div>
+
+        <form class="form-grid">
+            {% for question in questions %}
+            <div class="question-block">
+                <h3>Q{{ forloop.counter }}. {{ question.text }}</h3>
+                {% for option in question.options %}
+                <label class="option-row">
+                    <input type="radio" name="question_{{ question.id }}" value="{{ option }}">
+                    <span>{{ option }}</span>
+                </label>
+                {% endfor %}
+            </div>
+            {% endfor %}
+
+            <a href="{% url 'exam_result' exam_id %}" class="btn btn-primary">Submit Exam</a>
+        </form>
+    </article>
+</section>
+{% endblock %}

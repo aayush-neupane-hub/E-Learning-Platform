@@ -1,0 +1,29 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Courses | LearnHub{% endblock %}
+
+{% block content %}
+<section class="container section">
+    <div class="section-header">
+        <h1>Browse Courses</h1>
+        <p class="text-muted">Choose from curated learning paths.</p>
+    </div>
+
+    <div class="course-grid">
+        {% for course in courses %}
+        <article class="card course-card">
+            <img src="{{ course.image }}" alt="{{ course.title }}">
+            <div class="card-body">
+                <h3>{{ course.title }}</h3>
+                <div class="star-rating" data-stars="{{ course.rating }}"></div>
+                <div class="progress mt-1">
+                    <div class="progress-bar" style="width: {{ course.progress }}%;"></div>
+                </div>
+                <small>{{ course.progress }}% completed</small>
+                <a href="{% url 'course_detail' course.id %}" class="btn btn-primary mt-1">View Course</a>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

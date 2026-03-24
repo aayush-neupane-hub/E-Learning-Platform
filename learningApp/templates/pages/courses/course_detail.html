@@ -1,0 +1,31 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}{{ course.title }} | Course Detail{% endblock %}
+
+{% block content %}
+<section class="container section">
+    <article class="card course-detail">
+        <img src="{{ course.image }}" alt="{{ course.title }}" class="course-banner">
+        <div>
+            <h1>{{ course.title }}</h1>
+            <p class="text-muted">{{ course.description }}</p>
+            <div class="star-rating" data-stars="{{ course.rating }}"></div>
+        </div>
+    </article>
+
+    <section class="card mt-2">
+        <h2>Lessons</h2>
+        <ul class="lesson-list">
+            {% for lesson in lessons %}
+            <li>
+                <div>
+                    <h3>{{ lesson.title }}</h3>
+                    <small>{{ lesson.duration }}</small>
+                </div>
+                <a href="{% url 'lesson_view' course.id lesson.id %}" class="btn btn-ghost">Open Lesson</a>
+            </li>
+            {% endfor %}
+        </ul>
+    </section>
+</section>
+{% endblock %}

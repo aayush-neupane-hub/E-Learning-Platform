@@ -1,0 +1,40 @@
+<!-- Main Navigation -->
+<header class="navbar-wrapper">
+    <nav class="navbar container">
+        <a href="{% url 'home' %}" class="brand">LearnHub</a>
+
+        <button id="mobileMenuBtn" class="menu-toggle" aria-label="Open navigation">
+            <span></span>
+            <span></span>
+            <span></span>
+        </button>
+
+        <div id="mainNav" class="nav-links">
+            <a href="{% url 'home' %}">Home</a>
+            <a href="{% url 'course_list' %}">Courses</a>
+            <a href="{% url 'student_dashboard' %}">Dashboard</a>
+        </div>
+
+        <div class="nav-actions">
+            <div class="notification">
+                <button id="notificationBtn" class="btn btn-ghost" type="button">Notifications</button>
+                <div id="notificationDropdown" class="notification-dropdown">
+                    <p>New lesson uploaded in Python Masterclass.</p>
+                    <p>Your exam starts in 2 hours.</p>
+                    <p>Instructor replied to your comment.</p>
+                </div>
+            </div>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'profile' %}" class="user-pill">{{ user.username }}</a>
+                <span class="role-pill">
+                    {% if user.is_staff %}Instructor{% else %}Student{% endif %}
+                </span>
+                <a href="#" class="btn btn-outline">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}" class="btn btn-ghost">Login</a>
+                <a href="{% url 'signup' %}" class="btn btn-primary">Signup</a>
+            {% endif %}
+        </div>
+    </nav>
+</header>

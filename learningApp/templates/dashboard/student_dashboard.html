@@ -1,0 +1,40 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %}Student Dashboard | LearnHub{% endblock %}
+
+{% block content %}
+<section class="container section dashboard-layout">
+    {% include 'components/sidebar.html' %}
+
+    <div class="dashboard-content">
+        <div class="section-header">
+            <h1>Student Dashboard</h1>
+            <p class="text-muted">Track your progress and continue learning.</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="card-sm"><h3>Courses Enrolled</h3><p>8</p></div>
+            <div class="card-sm"><h3>Lessons Completed</h3><p>54</p></div>
+            <div class="card-sm"><h3>Exams Passed</h3><p>6</p></div>
+        </div>
+
+        <div class="card mt-2">
+            <h2>Current Courses</h2>
+            <div class="course-grid">
+                {% for course in courses %}
+                <article class="card course-card">
+                    <img src="{{ course.image }}" alt="{{ course.title }}">
+                    <div class="card-body">
+                        <h3>{{ course.title }}</h3>
+                        <div class="progress">
+                            <div class="progress-bar" style="width: {{ course.progress }}%;"></div>
+                        </div>
+                        <small>{{ course.progress }}% completed</small>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
