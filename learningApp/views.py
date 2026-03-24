@@ -29,13 +29,10 @@ SAMPLE_COURSES = [
 ]
 
 
+
 def home(request):
     context = {"featured_courses": SAMPLE_COURSES}
-    return render(request, "home.html", context)
-
-
-def index(request):
-    return render(request, "pages/index.html")
+    return render(request, "pages/home.html", context)
 
 
 def login_view(request):
@@ -82,7 +79,7 @@ def exam(request, exam_id):
         {"id": 2, "text": "Which CSS property controls text color?", "options": ["font-style", "text-color", "color", "foreground"]},
     ]
     context = {"exam_id": exam_id, "questions": questions}
-    return render(request, "exams/exam.html", context)
+    return render(request, "pages/exams/exam.html", context)
 
 
 def exam_result(request, exam_id):
@@ -92,14 +89,14 @@ def exam_result(request, exam_id):
         "correct_answers": 22,
         "total_questions": 25,
     }
-    return render(request, "exams/result.html", context)
+    return render(request, "pages/exams/result.html", context)
 
 
 def student_dashboard(request):
     context = {"courses": SAMPLE_COURSES}
-    return render(request, "dashboard/student_dashboard.html", context)
+    return render(request, "pages/dashboard/student_dashboard.html", context)
 
 
 def instructor_dashboard(request):
     context = {"courses": SAMPLE_COURSES}
-    return render(request, "dashboard/instructor_dashboard.html", context)
+    return render(request, "pages/dashboard/instructor_dashboard.html", context)
