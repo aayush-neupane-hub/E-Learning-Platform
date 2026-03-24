@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 
 # Model for course levels, using Django's TextChoices for better readability and maintainability
 class Level(models.TextChoices):
-    BEGININER = 'Beginner', 'beginner'
+    BEGINNER = 'Beginner', 'beginner'
     INTERMEDIATE = 'Intermediate', 'intermediate'
     ADVANCED = 'Advanced', 'advanced'
 
@@ -47,7 +47,7 @@ class Course(models.Model):
     instructor = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='courses')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='courses')
     is_published = models.BooleanField(default=False)
-    level = models.ForeignKey('Level', on_delete=models.PROTECT, related_name='courses')
+    level = models.CharField(max_length=20, choices=Level.choices, default=Level.BEGINNER)
     price = models.DecimalField(max_digits=6, decimal_places=2, default=0.00)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -126,3 +126,101 @@ class Progress(models.Model):
     def __str__(self):
         return f'{self.user.username} - {self.course.title} - {"Completed" if self.is_completed else "In Progress"}'
     
+
+
+# Model for Quiz, with fields for course, title, time limit, total marks, publication status, and timestamps
+class Quiz(models.Model):
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='quizzes')
+    title = models.CharField(max_length=255)
+    time_limit = models.PositiveIntegerField(help_text='Time limit in minutes')
+    total_marks = models.PositiveIntegerField()
+    is_published = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+# Model for Question, with fields for quiz, text, and marks
+class Question(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
+    text = models.TextField()
+    marks = models.PositiveIntegerField()
+
+
+# Model for Option, with fields for question, text, and whether it's the correct answer or not
+class Option(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
+    text = models.CharField(max_length=255)
+    is_correct = models.BooleanField(default=False)
+
+
+# Model for tracking quiz attempts by users, with fields for quiz, user, and timestamp of the attempt
+class QuizAttempt(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='attempts')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='quiz_attempts')
+    attempted_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class Submission(models.Model):
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='submissions')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='submissions')
+    score = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
+    feedback = models.TextField(blank=True, null=True)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+
+
+class Answer(models.Model):
+    submission = models.ForeignKey(Submission, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    selected_option = models.ForeignKey(Option, on_delete=models.CASCADE)
+
+
+
+# Model for progress tracking and Analytics
+class CourseProgress(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='course_progress')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='course_progress')
+    progress_percentage = models.DecimalField(max_digits=5, decimal_places=2, default=0.00)
+    completed_lessons = models.ManyToManyField(Lesson, blank=True)
+    last_accessed = models.DateTimeField(auto_now=True)
+
+
+
+# Model for Comment / discussion on courses or lessons
+class Comment(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
+    lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='comments', blank=True, null=True)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='comments', blank=True, null=True)
+    context = models.TextField()
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+# model for notifications to users about course updates, new courses, or other relevant information
+class Notification(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='notifications')
+    message = models.TextField()
+    is_read = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+
+# Model for Wishlist, allowing users to save courses they are interested in for future reference
+class Wishlist(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='wishlist')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='wishlisted_by')
+    added_at = models.DateTimeField(auto_now_add=True)
+
+
+
+# MOdel for Certification, allowing users to earn certificates upon course completion
+class Certificate(models.Model):
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='certificates')
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='certificates')
+    certificate_id = models.CharField(max_length=255, unique=True)
+    certificate_file = models.FileField(upload_to='certificates/' , blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+# 
