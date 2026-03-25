@@ -55,6 +55,9 @@ INSTALLED_APPS = [
     'learningApp.apps.LearningappConfig',
     'mptt',
     'ckeditor',
+    'django_bootstrap5',
+    'crispy_forms',
+    'crispy_bootstrap5',
 ]
 
 MIDDLEWARE = [
