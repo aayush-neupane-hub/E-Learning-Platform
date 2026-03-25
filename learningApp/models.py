@@ -225,8 +225,8 @@ class Certificate(models.Model):
 
 # Model for Payment, allowing users to make payments for courses they want to enroll in
 class Payment(models.Model):
-    user = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name='payments')
-    course = models.ForeignKey(Course, on_delete=models.SET_NULL, related_name='payments')
+    user = models.ForeignKey(Profile, on_delete=models.SET_NULL, related_name='payments', null=True, blank=True)
+    course = models.ForeignKey(Course, on_delete=models.SET_NULL, related_name='payments', null=True, blank=True)
     amount = models.DecimalField(max_digits=6, decimal_places=2)
     payment_method = models.CharField(max_length=50)
     payment_status = models.CharField(max_length=20, choices=[('Pending', 'Pending'), ('Completed', 'Completed'), ('Failed', 'Failed')], default='Pending')
@@ -242,4 +242,3 @@ class CourseAnalytics(models.Model):
     average_rating = models.DecimalField(max_digits=3, decimal_places=2, default=0.00)
     total_reviews = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(auto_now_add=True)
-    
