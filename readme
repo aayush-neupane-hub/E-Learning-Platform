@@ -1,0 +1,117 @@
+# E-Learning Platform
+
+A Django-based e-learning web application with role-based users, course management, lessons, quizzes, progress tracking, wishlist, payments, certificates, and instructor analytics.
+
+## Tech Stack
+
+- Python
+- Django 6
+- MySQL
+- django-ckeditor
+- django-mptt
+
+## Core Features
+
+- User authentication: signup, login, profile
+- Role-based profiles: Student and Instructor
+- Hierarchical course categories (tree structure)
+- Courses with modules, lessons, resources, and media
+- Quiz system with questions, options, and attempts
+- Enrollment and progress tracking
+- Reviews, comments, and notifications
+- Wishlist and payment records
+- Certificates and course analytics
+- Admin panel with model management and image previews
+
+## Project Structure
+
+```text
+coreBackEnd/      # Django project settings and root URLs
+learningApp/      # Main LMS app (models, views, urls, templates)
+static/           # CSS, JS, vendor assets
+media/            # Uploaded media files
+manage.py
+```
+
+## Requirements
+
+- Python 3.11+ (recommended)
+- MySQL server running
+- pip
+
+## Installation & Setup
+
+1. Clone and open the project folder.
+2. Create a virtual environment and activate it.
+3. Install dependencies:
+
+```bash
+pip install django python-dotenv django-mptt django-ckeditor pillow mysqlclient
+```
+
+If mysqlclient fails on your system, install MySQL build tools/dev packages first, then retry.
+
+## Environment Variables
+
+Create a .env file in the project root (same folder as manage.py):
+
+```env
+DB_NAME=your_database_name
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+DB_HOST=localhost
+DB_PORT=3306
+```
+
+Legacy variable names also supported by the project:
+
+- DATABASE_NAME
+- DATABASE_USER
+- DATABASE_PASSWORD
+- DATABASE_HOST
+- DATABASE_PORT
+
+## Database Setup
+
+Run migrations:
+
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+Create an admin user:
+
+```bash
+python manage.py createsuperuser
+```
+
+## Run the Project
+
+```bash
+python manage.py runserver
+```
+
+Open in browser:
+
+- App: http://127.0.0.1:8000/
+- Admin: http://127.0.0.1:8000/admin/
+
+## Main Routes
+
+- /
+- /accounts/login/
+- /accounts/signup/
+- /accounts/profile/
+- /courses/
+- /courses/<course_id>/
+- /courses/<course_id>/lessons/<lesson_id>/
+- /exams/<exam_id>/
+- /exams/<exam_id>/result/
+- /dashboard/student/
+- /dashboard/instructor/
+
+## Notes
+
+- Ensure media and static settings are configured for production before deployment.
+- DEBUG is currently enabled in settings and should be disabled in production.

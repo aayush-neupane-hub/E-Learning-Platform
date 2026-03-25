@@ -10,6 +10,14 @@
 <body>
     {% include 'layouts/navbar.html' %}
 
+    {% if messages %}
+    <section class="container mt-1">
+        {% for message in messages %}
+            <div class="card-sm">{{ message }}</div>
+        {% endfor %}
+    </section>
+    {% endif %}
+
     <main class="site-main">
         {% block content %}{% endblock %}
     </main>

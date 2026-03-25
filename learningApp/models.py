@@ -1,5 +1,7 @@
 from django.db import models
+from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
+from ckeditor.fields import RichTextField
 
 # Create your models here.
 
@@ -14,7 +16,8 @@ class Level(models.TextChoices):
 # Model for user profile, extending the built-in User model with additional fields
 class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    bio = models.TextField(blank=True, null=True)
+    bio = RichTextField(blank=True, null=True)
+    role = models.CharField(max_length=20, choices=[('Student', 'Student'), ('Instructor', 'Instructor')], default='Student')
     profile_picture = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -25,12 +28,16 @@ class Profile(models.Model):
 
 
 
-# Model for Categories, with a name field with slug field for URL-friendly representation and timestamps
-class Category(models.Model):
+# Model for Categories, with tree hierarchy support via django-mptt
+class Category(MPTTModel):
+    parent = TreeForeignKey('self', on_delete=models.PROTECT, related_name='children', blank=True, null=True)
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    class MPTTMeta:
+        order_insertion_by = ['name']
 
     def __str__(self):
         return self.name
@@ -42,7 +49,7 @@ class Category(models.Model):
 class Course(models.Model):
     title = models.CharField(max_length=255)
     slug = models.SlugField(unique=True)
-    description = models.TextField(blank=True, null=True)
+    description = RichTextField(blank=True, null=True)
     thumbnail = models.ImageField(upload_to='course_thumbnails/', blank=True, null=True)
     instructor = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='courses')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='courses')
@@ -89,7 +96,7 @@ class Module(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='modules')
     chapter = models.CharField(max_length=255)
     title = models.CharField(max_length=255)
-    description = models.TextField(blank=True, null=True)
+    description = RichTextField(blank=True, null=True)
     order = models.PositiveIntegerField()
     created_at = models.DateTimeField(auto_now_add=True)
 
@@ -98,7 +105,7 @@ class Module(models.Model):
 class Lesson(models.Model):
     module = models.ForeignKey(Module, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=255)
-    content = models.TextField(blank=True, null=True)
+    content = RichTextField(blank=True, null=True)
     video_url = models.URLField(blank=True, null=True)
     order = models.PositiveIntegerField()
     is_published = models.BooleanField(default=False)  # To indicate if the lesson is published or not
@@ -142,14 +149,14 @@ class Quiz(models.Model):
 # Model for Question, with fields for quiz, text, and marks
 class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE, related_name='questions')
-    text = models.TextField()
+    text = RichTextField()
     marks = models.PositiveIntegerField()
 
 
 # Model for Option, with fields for question, text, and whether it's the correct answer or not
 class Option(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='options')
-    text = models.CharField(max_length=255)
+    text = RichTextField()
     is_correct = models.BooleanField(default=False)
 
 
@@ -165,7 +172,7 @@ class Submission(models.Model):
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='submissions')
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='submissions')
     score = models.DecimalField(max_digits=5, decimal_places=2, blank=True, null=True)
-    feedback = models.TextField(blank=True, null=True)
+    feedback = RichTextField(blank=True, null=True)
     submitted_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -192,7 +199,7 @@ class Comment(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='comments')
     lesson = models.ForeignKey(Lesson, on_delete=models.CASCADE, related_name='comments', blank=True, null=True)
     course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='comments', blank=True, null=True)
-    context = models.TextField()
+    context = RichTextField()
     created_at = models.DateTimeField(auto_now_add=True)
 
 
@@ -200,7 +207,7 @@ class Comment(models.Model):
 # model for notifications to users about course updates, new courses, or other relevant information
 class Notification(models.Model):
     user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='notifications')
-    message = models.TextField()
+    message = RichTextField()
     is_read = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
 
